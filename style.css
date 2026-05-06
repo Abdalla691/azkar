@@ -1,0 +1,536 @@
+/* ═══════════════════════════════════════════════════════════════════
+   ADHKAR APP v2 — style.css
+   Design language: "Illuminated Manuscript" — warm ivory tones,
+   deep teal-greens, aged-gold accents. Feels like a premium
+   Islamic devotional app, not a webpage.
+═══════════════════════════════════════════════════════════════════ */
+
+/* ─── DESIGN TOKENS ─────────────────────────────────────────────── */
+:root {
+  /* Core palette */
+  --teal-900:   #0d1f1a;
+  --teal-800:   #122a22;
+  --teal-700:   #1a3d2e;
+  --teal-600:   #22503a;
+  --teal-500:   #2d6b4d;
+
+  --gold-500:   #c9a14a;
+  --gold-400:   #dbb96a;
+  --gold-300:   #edd99a;
+  --gold-200:   #f5ecc8;
+
+  --ivory:      #fdf6e3;
+  --ivory-dim:  #ede4c8;
+  --text-main:  #f0e8d0;
+  --text-muted: #8a9e8c;
+  --text-gold:  #c9a14a;
+
+  --green-ok:   #3db87a;
+  --green-glow: rgba(61,184,122,0.18);
+
+  --card-bg:       rgba(18, 42, 34, 0.95);
+  --card-border:   rgba(201,161,74,0.18);
+  --card-border-done: rgba(61,184,122,0.5);
+
+  --shadow-card: 0 2px 20px rgba(0,0,0,0.35);
+  --radius-card: 20px;
+  --radius-btn:  50px;
+
+  /* Fonts */
+  --font-arabic:  'Amiri Quran', 'Amiri', serif;
+  --font-ui:      'Cairo', sans-serif;
+}
+
+/* ─── RESET ──────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+button { cursor: pointer; border: none; background: none; font-family: inherit; }
+
+/* ─── BODY / APP SHELL ───────────────────────────────────────────── */
+body {
+  font-family: var(--font-ui);
+  background: var(--teal-900);
+  color: var(--text-main);
+  min-height: 100dvh;
+  direction: rtl;
+  /* Subtle geometric tile background */
+  background-image:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(45,107,77,0.25) 0%, transparent 70%),
+    url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23c9a14a' stroke-width='0.4' stroke-opacity='0.07'%3E%3Cpath d='M40 0 L80 40 L40 80 L0 40Z'/%3E%3Ccircle cx='40' cy='40' r='20'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.app-shell {
+  max-width: 540px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* ─── HEADER ─────────────────────────────────────────────────────── */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: linear-gradient(180deg, var(--teal-800) 0%, rgba(18,42,34,0.97) 100%);
+  border-bottom: 1px solid var(--card-border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 0;
+  /* Decorative top border */
+  box-shadow: 0 1px 0 rgba(201,161,74,0.2), 0 4px 24px rgba(0,0,0,0.4);
+}
+
+/* Subtle geometric overlay on the header */
+.header-bg-pattern {
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0 L40 20 L20 40 L0 20Z' fill='none' stroke='%23c9a14a' stroke-width='0.5' stroke-opacity='0.06'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px 12px;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-icon {
+  font-size: 1.8rem;
+  color: var(--gold-400);
+  text-shadow: 0 0 20px rgba(201,161,74,0.5);
+  line-height: 1;
+}
+
+.brand-title {
+  font-family: var(--font-arabic);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--gold-400);
+  line-height: 1.1;
+  text-shadow: 0 0 20px rgba(201,161,74,0.3);
+}
+
+.brand-sub {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  margin-top: 2px;
+}
+
+/* Reset All button */
+.reset-all-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 14px;
+  background: rgba(201,161,74,0.1);
+  border: 1px solid rgba(201,161,74,0.25);
+  border-radius: var(--radius-btn);
+  color: var(--gold-400);
+  font-family: var(--font-ui);
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: background 0.2s, border-color 0.2s;
+}
+.reset-all-btn:hover { background: rgba(201,161,74,0.18); border-color: rgba(201,161,74,0.5); }
+.reset-icon { font-size: 1rem; }
+
+/* ─── STATS BAR ──────────────────────────────────────────────────── */
+.stats-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 24px 12px;
+  gap: 12px;
+}
+
+.stat-chip {
+  text-align: center;
+  flex: 1;
+}
+.stat-num {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: var(--font-arabic);
+  line-height: 1;
+}
+.stat-lbl {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+  font-family: var(--font-ui);
+}
+.stat-done .stat-num  { color: var(--green-ok); }
+.stat-remain .stat-num { color: var(--gold-400); }
+
+/* Master progress ring */
+.stats-master-ring {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+}
+.master-ring-svg {
+  width: 64px;
+  height: 64px;
+  transform: rotate(-90deg);
+}
+.mr-bg   { fill: none; stroke: rgba(255,255,255,0.06); stroke-width: 6; }
+.mr-fill {
+  fill: none;
+  stroke: var(--gold-500);
+  stroke-width: 6;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.6s cubic-bezier(0.4,0,0.2,1), stroke-dasharray 0.6s cubic-bezier(0.4,0,0.2,1);
+  filter: drop-shadow(0 0 4px rgba(201,161,74,0.6));
+}
+.master-ring-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.master-pct {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--gold-300);
+  font-family: var(--font-ui);
+}
+
+/* ─── TAB BAR ────────────────────────────────────────────────────── */
+.tab-bar {
+  display: flex;
+  gap: 6px;
+  padding: 0 16px 14px;
+}
+.tab-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 12px;
+  border-radius: 12px;
+  font-family: var(--font-ui);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid transparent;
+  transition: all 0.25s;
+}
+.tab-btn.active {
+  background: linear-gradient(135deg, rgba(201,161,74,0.18), rgba(201,161,74,0.08));
+  border-color: rgba(201,161,74,0.35);
+  color: var(--gold-400);
+}
+.tab-icon { font-size: 1rem; }
+
+/* ─── CARDS FEED ─────────────────────────────────────────────────── */
+.cards-feed {
+  flex: 1;
+  padding: 16px 14px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+}
+
+/* Empty state */
+.empty-state {
+  margin: 60px auto;
+  text-align: center;
+  color: var(--text-muted);
+}
+.empty-state .es-icon { font-size: 3rem; display: block; margin-bottom: 12px; }
+.empty-state p { font-size: 0.95rem; line-height: 1.7; }
+
+/* ─── DHIKR CARD ─────────────────────────────────────────────────── */
+.dhikr-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-card);
+  padding: 0;
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  position: relative;
+  animation: cardIn 0.35s ease both;
+  transition: border-color 0.4s, box-shadow 0.4s;
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Completed card */
+.dhikr-card.done {
+  border-color: var(--card-border-done);
+  box-shadow: 0 2px 20px var(--green-glow), var(--shadow-card);
+}
+
+/* Gold top accent line */
+.dhikr-card::before {
+  content: '';
+  display: block;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold-500), transparent);
+  opacity: 0.5;
+}
+.dhikr-card.done::before {
+  background: linear-gradient(90deg, transparent, var(--green-ok), transparent);
+  opacity: 0.7;
+}
+
+/* Card Header row */
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px 0;
+}
+.card-index {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  background: rgba(255,255,255,0.05);
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-family: var(--font-ui);
+}
+.card-title-tag {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--gold-400);
+  font-family: var(--font-ui);
+}
+.card-done-badge {
+  display: none;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--green-ok);
+  font-family: var(--font-ui);
+}
+.dhikr-card.done .card-done-badge { display: flex; }
+.dhikr-card.done .card-title-tag  { display: none; }
+
+/* Card body: Arabic text */
+.card-body {
+  padding: 14px 18px 10px;
+}
+.card-arabic {
+  font-family: var(--font-arabic);
+  font-size: clamp(1.1rem, 4vw, 1.28rem);
+  line-height: 2.1;
+  color: var(--ivory);
+  text-align: right;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+}
+
+/* Source label */
+.card-source {
+  display: inline-block;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  background: rgba(255,255,255,0.04);
+  padding: 2px 10px;
+  border-radius: 20px;
+  margin-top: 6px;
+  font-family: var(--font-ui);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+/* Benefit / Hadith */
+.card-benefit {
+  margin: 10px 18px 0;
+  padding: 9px 12px;
+  background: rgba(201,161,74,0.07);
+  border-right: 3px solid var(--gold-500);
+  border-radius: 0 10px 10px 0;
+  font-size: 0.8rem;
+  color: var(--gold-300);
+  line-height: 1.7;
+  font-family: var(--font-ui);
+}
+
+/* ─── PROGRESS BAR ───────────────────────────────────────────────── */
+.card-progress-wrap {
+  padding: 14px 18px 0;
+}
+.card-progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.progress-fraction {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--gold-400);
+  font-family: var(--font-arabic);
+}
+.progress-label-text {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-family: var(--font-ui);
+}
+.progress-track {
+  height: 7px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: 10px;
+  background: linear-gradient(90deg, var(--teal-500), var(--gold-500));
+  transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+  box-shadow: 0 0 8px rgba(201,161,74,0.4);
+}
+.dhikr-card.done .progress-fill {
+  background: linear-gradient(90deg, var(--teal-600), var(--green-ok));
+  box-shadow: 0 0 8px rgba(61,184,122,0.5);
+}
+
+/* ─── CARD FOOTER: TAP BUTTON ────────────────────────────────────── */
+.card-footer {
+  padding: 14px 18px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* The big tap button */
+.tap-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 20px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--teal-600), var(--teal-500));
+  border: 1px solid rgba(201,161,74,0.3);
+  color: var(--gold-300);
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  font-weight: 700;
+  transition: transform 0.1s, box-shadow 0.2s, background 0.3s;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.06);
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+  overflow: hidden;
+}
+.tap-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0);
+  transition: background 0.15s;
+}
+.tap-btn:active { transform: scale(0.96); box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+.tap-btn:active::after { background: rgba(255,255,255,0.07); }
+
+.tap-btn.completed-btn {
+  background: linear-gradient(135deg, var(--teal-700), rgba(61,184,122,0.2));
+  border-color: rgba(61,184,122,0.4);
+  color: var(--green-ok);
+  cursor: default;
+  pointer-events: none;
+}
+.tap-btn-icon { font-size: 1.2rem; line-height: 1; }
+.tap-btn-label { font-size: 0.9rem; }
+
+/* Tap pulse animation */
+@keyframes tapPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(201,161,74,0.5), 0 4px 16px rgba(0,0,0,0.3); }
+  100% { box-shadow: 0 0 0 16px rgba(201,161,74,0), 0 4px 16px rgba(0,0,0,0.3); }
+}
+.tap-btn.pulsing { animation: tapPulse 0.35s ease-out; }
+
+/* Reset-one button */
+.reset-one-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.reset-one-btn:hover { color: var(--gold-400); border-color: rgba(201,161,74,0.3); background: rgba(201,161,74,0.07); }
+.reset-one-label { font-size: 0.55rem; font-family: var(--font-ui); font-weight: 600; }
+
+/* ─── TOAST NOTIFICATION ─────────────────────────────────────────── */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: linear-gradient(135deg, var(--teal-600), var(--teal-700));
+  border: 1px solid rgba(201,161,74,0.4);
+  color: var(--gold-300);
+  padding: 12px 24px;
+  border-radius: var(--radius-btn);
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  z-index: 999;
+  opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.175,0.885,0.32,1.275), opacity 0.4s;
+  white-space: nowrap;
+}
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+.toast-icon { font-size: 1.1rem; }
+
+/* ─── SCROLLBAR ──────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--teal-900); }
+::-webkit-scrollbar-thumb { background: var(--teal-600); border-radius: 10px; }
+
+/* ─── RESPONSIVE ─────────────────────────────────────────────────── */
+@media (max-width: 400px) {
+  .card-arabic { font-size: 1.05rem; line-height: 2; }
+  .brand-title { font-size: 1.15rem; }
+  .reset-label { display: none; }
+  .reset-all-btn { padding: 8px 10px; }
+}
+
+@media (min-width: 541px) {
+  /* On desktop, give it a phone-like frame feel */
+  .app-shell {
+    border-left: 1px solid var(--card-border);
+    border-right: 1px solid var(--card-border);
+    box-shadow: 0 0 60px rgba(0,0,0,0.5);
+  }
+  body { background: var(--teal-900); }
+}

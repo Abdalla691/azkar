@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#1a2e1a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <title>أذكار الصباح والمساء</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Amiri:wght@400;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ╔══════════════════════════════════════════╗
+       ║           STICKY APP HEADER              ║
+       ╚══════════════════════════════════════════╝ -->
+  <div class="app-shell">
+
+    <header class="app-header">
+      <div class="header-bg-pattern"></div>
+
+      <div class="header-top">
+        <div class="header-brand">
+          <span class="brand-icon">☽</span>
+          <div>
+            <h1 class="brand-title" id="headerTitle">أذكار الصباح</h1>
+            <p class="brand-sub">حصن المسلم</p>
+          </div>
+        </div>
+        <button class="reset-all-btn" id="resetAllBtn" title="إعادة تعيين الكل">
+          <span class="reset-icon">↺</span>
+          <span class="reset-label">إعادة</span>
+        </button>
+      </div>
+
+      <!-- Overall Stats Bar -->
+      <div class="stats-bar">
+        <div class="stat-chip stat-done">
+          <span class="stat-num" id="statDone">0</span>
+          <span class="stat-lbl">مكتمل</span>
+        </div>
+        <div class="stats-master-ring">
+          <svg viewBox="0 0 80 80" class="master-ring-svg">
+            <circle class="mr-bg" cx="40" cy="40" r="34"/>
+            <circle class="mr-fill" id="masterRingFill" cx="40" cy="40" r="34"
+              stroke-dasharray="213.6"
+              stroke-dashoffset="213.6"/>
+          </svg>
+          <div class="master-ring-center">
+            <span class="master-pct" id="masterPct">0%</span>
+          </div>
+        </div>
+        <div class="stat-chip stat-remain">
+          <span class="stat-num" id="statRemain">0</span>
+          <span class="stat-lbl">متبقي</span>
+        </div>
+      </div>
+
+      <!-- Tab Bar -->
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="morning">
+          <span class="tab-icon">🌅</span> الصباح
+        </button>
+        <button class="tab-btn" data-tab="evening">
+          <span class="tab-icon">🌙</span> المساء
+        </button>
+      </div>
+    </header>
+
+    <!-- ╔══════════════════════════════════════════╗
+         ║              CARDS FEED                  ║
+         ╚══════════════════════════════════════════╝ -->
+    <main class="cards-feed" id="cardsFeed">
+      <!-- Rendered by script.js -->
+    </main>
+
+    <!-- ╔══════════════════════════════════════════╗
+         ║          COMPLETION TOAST                ║
+         ╚══════════════════════════════════════════╝ -->
+    <div class="toast" id="completionToast">
+      <span class="toast-icon">✨</span>
+      <span class="toast-msg" id="toastMsg">تم الانتهاء من جميع الأذكار!</span>
+    </div>
+
+  </div><!-- /app-shell -->
+
+  <script src="script.js"></script>
+</body>
+</html>
