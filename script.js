@@ -404,3 +404,6 @@ function showToast(msg) {
   clearTimeout(toastTimer);
   toastTimer = setTimeout(function () { el.classList.remove('show'); }, 3500);
 }
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("./service-worker.js");
+}
