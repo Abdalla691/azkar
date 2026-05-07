@@ -1,4 +1,4 @@
-const CACHE_NAME = "adhkar-v3";
+const CACHE_NAME = "adhkar-v4";
 
 self.addEventListener("install", event => {
   self.skipWaiting(); // يشغّل النسخة الجديدة فورًا
