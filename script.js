@@ -407,3 +407,149 @@ function showToast(msg) {
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("./service-worker.js");
 }
+let prayerTimes;
+let nextPrayer;
+
+function formatTime(t){
+
+let [h,m]=t.split(":");
+
+h=parseInt(h);
+
+let period="ص";
+
+if(h>=12){
+
+period="م";
+
+if(h>12)h-=12;
+
+}
+
+if(h===0)h=12;
+
+return h+":"+m+" "+period;
+
+}
+
+async function loadPrayerTimes(){
+
+const res=await fetch("https://api.aladhan.com/v1/timingsByCity?city=Cairo&country=Egypt&method=5");
+
+const data=await res.json();
+
+prayerTimes=data.data.timings;
+
+calculateNextPrayer();
+
+renderAllPrayers();
+
+setInterval(updateCountdown,1000);
+
+}
+
+function calculateNextPrayer(){
+
+const prayers=[
+
+["الفجر",prayerTimes.Fajr],
+["الشروق",prayerTimes.Sunrise],
+["الظهر",prayerTimes.Dhuhr],
+["العصر",prayerTimes.Asr],
+["المغرب",prayerTimes.Maghrib],
+["العشاء",prayerTimes.Isha]
+
+];
+
+const now=new Date();
+
+for(let p of prayers){
+
+const [h,m]=p[1].split(":");
+
+const d=new Date();
+
+d.setHours(h);
+d.setMinutes(m);
+d.setSeconds(0);
+
+if(d>now){
+
+nextPrayer={name:p[0],time:p[1],date:d};
+
+break;
+
+}
+
+}
+
+document.getElementById("nextPrayer").innerText=
+nextPrayer.name+" "+formatTime(nextPrayer.time);
+
+}
+
+function updateCountdown(){
+
+if(!nextPrayer)return;
+
+const diff=nextPrayer.date-new Date();
+
+if(diff<=0){
+
+showPrayerAlert(nextPrayer.name);
+
+calculateNextPrayer();
+
+return;
+
+}
+
+const hours=Math.floor(diff/3600000);
+const minutes=Math.floor((diff%3600000)/60000);
+
+document.getElementById("countdown").innerText=
+hours+"س "+minutes+"د";
+
+}
+
+function renderAllPrayers(){
+
+const box=document.getElementById("allPrayers");
+
+box.innerHTML=
+
+"الفجر "+formatTime(prayerTimes.Fajr)+"<br>"+
+"الشروق "+formatTime(prayerTimes.Sunrise)+"<br>"+
+"الظهر "+formatTime(prayerTimes.Dhuhr)+"<br>"+
+"العصر "+formatTime(prayerTimes.Asr)+"<br>"+
+"المغرب "+formatTime(prayerTimes.Maghrib)+"<br>"+
+"العشاء "+formatTime(prayerTimes.Isha);
+
+}
+
+document.getElementById("prayerBox").onclick=function(){
+
+const box=document.getElementById("allPrayers");
+
+box.style.display=
+box.style.display==="block"?"none":"block";
+
+}
+
+function showPrayerAlert(name){
+
+const alert=document.getElementById("prayerAlert");
+
+alert.innerText=name+" - حي على الصلاة حي على الفلاح";
+
+alert.style.display="block";
+
+setTimeout(()=>{
+
+alert.style.display="none";
+
+},7000);
+
+}
+
+loadPrayerTimes();
