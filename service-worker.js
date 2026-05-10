@@ -28,7 +28,7 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-const CACHE_NAME = 'adhkar-v5';  // ← bump this number on every deploy
+const CACHE_NAME = 'adhkar-v5.1';  // ← bump this number on every deploy
 
 /* ── INSTALL ────────────────────────────────────────────────────
    Cache your static files. skipWaiting() means this new SW
