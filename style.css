@@ -1,13 +1,11 @@
 /* ═══════════════════════════════════════════════════════════════════
-   ADHKAR APP v2 — style.css
-   Design language: "Illuminated Manuscript" — warm ivory tones,
-   deep teal-greens, aged-gold accents. Feels like a premium
-   Islamic devotional app, not a webpage.
+   ADHKAR APP v3 — style.css
+   Design: "Illuminated Manuscript" — warm ivory, deep teal, aged gold.
+   NEW: Drawer, Prayer Widget (collapsible), Tasbeeh counter.
 ═══════════════════════════════════════════════════════════════════ */
 
 /* ─── DESIGN TOKENS ─────────────────────────────────────────────── */
 :root {
-  /* Core palette */
   --teal-900:   #0d1f1a;
   --teal-800:   #122a22;
   --teal-700:   #1a3d2e;
@@ -36,7 +34,6 @@
   --radius-card: 20px;
   --radius-btn:  50px;
 
-  /* Fonts */
   --font-arabic:  'Amiri Quran', 'Amiri', serif;
   --font-ui:      'Cairo', sans-serif;
 }
@@ -45,20 +42,21 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; scroll-behavior: smooth; }
 button { cursor: pointer; border: none; background: none; font-family: inherit; }
+ul { list-style: none; }
 
-/* ─── BODY / APP SHELL ───────────────────────────────────────────── */
+/* ─── BODY ───────────────────────────────────────────────────────── */
 body {
   font-family: var(--font-ui);
   background: var(--teal-900);
   color: var(--text-main);
   min-height: 100dvh;
   direction: rtl;
-  /* Subtle geometric tile background */
   background-image:
     radial-gradient(ellipse 80% 60% at 50% 0%, rgba(45,107,77,0.25) 0%, transparent 70%),
     url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23c9a14a' stroke-width='0.4' stroke-opacity='0.07'%3E%3Cpath d='M40 0 L80 40 L40 80 L0 40Z'/%3E%3Ccircle cx='40' cy='40' r='20'/%3E%3C/g%3E%3C/svg%3E");
 }
 
+/* ─── APP SHELL ──────────────────────────────────────────────────── */
 .app-shell {
   max-width: 540px;
   margin: 0 auto;
@@ -68,7 +66,154 @@ body {
   position: relative;
 }
 
-/* ─── HEADER ─────────────────────────────────────────────────────── */
+/* ─── SECTIONS ───────────────────────────────────────────────────── */
+.app-section {
+  display: none;
+  flex-direction: column;
+  flex: 1;
+}
+.app-section.active {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   DRAWER / SIDEBAR
+══════════════════════════════════════════════════════════════════ */
+.drawer-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.drawer-overlay.open {
+  display: block;
+  opacity: 1;
+}
+
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 280px;
+  background: linear-gradient(180deg, #0e2620 0%, #091910 100%);
+  border-left: 1px solid rgba(201,161,74,0.2);
+  z-index: 300;
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  box-shadow: -8px 0 40px rgba(0,0,0,0.6);
+}
+.drawer.open {
+  transform: translateX(0);
+}
+
+.drawer-header {
+  padding: 40px 24px 24px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-bottom: 1px solid rgba(201,161,74,0.12);
+}
+.drawer-brand-icon {
+  font-size: 2rem;
+  color: var(--gold-400);
+  text-shadow: 0 0 20px rgba(201,161,74,0.5);
+}
+.drawer-title {
+  font-family: var(--font-arabic);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--gold-400);
+}
+.drawer-sub {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.drawer-menu {
+  flex: 1;
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.drawer-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-radius: 14px;
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: transparent;
+  transition: all 0.2s;
+  text-align: right;
+}
+.drawer-item:hover {
+  background: rgba(201,161,74,0.07);
+  color: var(--gold-300);
+}
+.drawer-item.active {
+  background: linear-gradient(135deg, rgba(201,161,74,0.16), rgba(45,107,77,0.2));
+  color: var(--gold-400);
+  border: 1px solid rgba(201,161,74,0.25);
+}
+.drawer-item-icon {
+  font-size: 1.3rem;
+}
+.drawer-footer {
+  padding: 20px 24px;
+  font-family: var(--font-arabic);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  border-top: 1px solid rgba(201,161,74,0.1);
+  text-align: center;
+}
+
+/* ─── HAMBURGER BUTTON ───────────────────────────────────────────── */
+.hamburger-btn {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(201,161,74,0.15);
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.hamburger-btn span {
+  display: block;
+  height: 2px;
+  background: var(--gold-400);
+  border-radius: 2px;
+  transition: all 0.2s;
+}
+.hamburger-btn:hover { background: rgba(201,161,74,0.12); }
+
+.hamburger-btn--light span {
+  background: rgba(255,255,255,0.85);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   AZKAR HEADER
+══════════════════════════════════════════════════════════════════ */
 .app-header {
   position: sticky;
   top: 0;
@@ -77,12 +222,9 @@ body {
   border-bottom: 1px solid var(--card-border);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  padding: 0;
-  /* Decorative top border */
   box-shadow: 0 1px 0 rgba(201,161,74,0.2), 0 4px 24px rgba(0,0,0,0.4);
 }
 
-/* Subtle geometric overlay on the header */
 .header-bg-pattern {
   position: absolute;
   inset: 0;
@@ -94,69 +236,65 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 20px 12px;
+  padding: 12px 16px 10px;
+  gap: 10px;
 }
 
 .header-brand {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+  flex: 1;
+  justify-content: center;
 }
 
 .brand-icon {
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   color: var(--gold-400);
   text-shadow: 0 0 20px rgba(201,161,74,0.5);
   line-height: 1;
 }
-
 .brand-title {
   font-family: var(--font-arabic);
-  font-size: 1.35rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: var(--gold-400);
   line-height: 1.1;
   text-shadow: 0 0 20px rgba(201,161,74,0.3);
 }
-
 .brand-sub {
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   color: var(--text-muted);
-  letter-spacing: 0.05em;
   margin-top: 2px;
 }
 
-/* Reset All button */
 .reset-all-btn {
   display: flex;
   align-items: center;
   gap: 5px;
-  padding: 8px 14px;
+  padding: 8px 12px;
   background: rgba(201,161,74,0.1);
   border: 1px solid rgba(201,161,74,0.25);
   border-radius: var(--radius-btn);
   color: var(--gold-400);
   font-family: var(--font-ui);
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   font-weight: 600;
   transition: background 0.2s, border-color 0.2s;
+  flex-shrink: 0;
 }
 .reset-all-btn:hover { background: rgba(201,161,74,0.18); border-color: rgba(201,161,74,0.5); }
 .reset-icon { font-size: 1rem; }
 
-/* ─── STATS BAR ──────────────────────────────────────────────────── */
+/* Stats Bar */
 .stats-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 4px 24px 12px;
+  padding: 4px 24px 10px;
   gap: 12px;
 }
-
-.stat-chip {
-  text-align: center;
-  flex: 1;
-}
+.stat-chip { text-align: center; flex: 1; }
 .stat-num {
   display: block;
   font-size: 1.5rem;
@@ -166,126 +304,225 @@ body {
 }
 .stat-lbl {
   display: block;
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   color: var(--text-muted);
   margin-top: 2px;
-  font-family: var(--font-ui);
 }
 .stat-done .stat-num  { color: var(--green-ok); }
 .stat-remain .stat-num { color: var(--gold-400); }
 
-/* Master progress ring */
-.stats-master-ring {
-  position: relative;
-  width: 64px;
-  height: 64px;
-  flex-shrink: 0;
-}
-.master-ring-svg {
-  width: 64px;
-  height: 64px;
-  transform: rotate(-90deg);
-}
+.stats-master-ring { position: relative; width: 60px; height: 60px; flex-shrink: 0; }
+.master-ring-svg   { width: 60px; height: 60px; transform: rotate(-90deg); }
 .mr-bg   { fill: none; stroke: rgba(255,255,255,0.06); stroke-width: 6; }
 .mr-fill {
-  fill: none;
-  stroke: var(--gold-500);
-  stroke-width: 6;
-  stroke-linecap: round;
-  transition: stroke-dashoffset 0.6s cubic-bezier(0.4,0,0.2,1), stroke-dasharray 0.6s cubic-bezier(0.4,0,0.2,1);
+  fill: none; stroke: var(--gold-500); stroke-width: 6; stroke-linecap: round;
+  transition: stroke-dashoffset 0.6s cubic-bezier(0.4,0,0.2,1);
   filter: drop-shadow(0 0 4px rgba(201,161,74,0.6));
 }
-.master-ring-center {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.master-pct {
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--gold-300);
-  font-family: var(--font-ui);
-}
+.master-ring-center { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+.master-pct { font-size: 0.75rem; font-weight: 700; color: var(--gold-300); }
 
-/* ─── TAB BAR ────────────────────────────────────────────────────── */
-.tab-bar {
-  display: flex;
-  gap: 6px;
-  padding: 0 16px 14px;
-}
+/* Tab Bar */
+.tab-bar { display: flex; gap: 6px; padding: 0 14px 12px; }
 .tab-btn {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 9px 12px;
-  border-radius: 12px;
-  font-family: var(--font-ui);
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  background: rgba(255,255,255,0.04);
-  border: 1px solid transparent;
-  transition: all 0.25s;
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  gap: 6px; padding: 9px 12px; border-radius: 12px;
+  font-family: var(--font-ui); font-size: 0.88rem; font-weight: 600;
+  color: var(--text-muted); background: rgba(255,255,255,0.04);
+  border: 1px solid transparent; transition: all 0.25s;
 }
 .tab-btn.active {
   background: linear-gradient(135deg, rgba(201,161,74,0.18), rgba(201,161,74,0.08));
-  border-color: rgba(201,161,74,0.35);
-  color: var(--gold-400);
+  border-color: rgba(201,161,74,0.35); color: var(--gold-400);
 }
 .tab-icon { font-size: 1rem; }
 
-/* ─── CARDS FEED ─────────────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════════════
+   PRAYER TIMES WIDGET (Collapsible Card)
+══════════════════════════════════════════════════════════════════ */
+.prayer-widget {
+  margin: 12px 14px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.3s;
+}
+.prayer-widget:hover { border-color: rgba(201,161,74,0.35); }
+
+/* ── Collapsed state ── */
+.prayer-collapsed {
+  padding: 14px 18px;
+}
+
+.prayer-col-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.prayer-col-right {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.prayer-mosque-icon { font-size: 1.1rem; }
+.prayer-label-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--gold-400);
+}
+.prayer-next-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.prayer-col-main {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 6px;
+}
+.prayer-next-name {
+  font-family: var(--font-arabic);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-main);
+  text-shadow: 0 0 12px rgba(201,161,74,0.2);
+}
+.prayer-next-time {
+  font-family: var(--font-arabic);
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: var(--gold-400);
+  text-shadow: 0 0 16px rgba(201,161,74,0.4);
+  line-height: 1;
+}
+
+.prayer-col-countdown {
+  text-align: center;
+  margin-bottom: 10px;
+}
+.countdown-text {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-family: var(--font-ui);
+}
+.expand-hint {
+  font-size: 0.75rem;
+  color: rgba(201,161,74,0.55);
+  margin-right: 6px;
+}
+
+.prayer-col-dates {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+.date-divider { color: rgba(201,161,74,0.3); }
+
+/* ── Expanded state ── */
+.prayer-expanded {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.prayer-widget.expanded .prayer-expanded {
+  max-height: 400px;
+}
+.prayer-widget.expanded .prayer-col-countdown .expand-hint {
+  opacity: 0;
+}
+
+.prayer-expanded-list {
+  padding: 0 18px;
+  border-top: 1px solid rgba(201,161,74,0.1);
+}
+.prayer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  transition: all 0.2s;
+}
+.prayer-row:last-child { border-bottom: none; }
+.prayer-row.current {
+  background: linear-gradient(135deg, rgba(201,161,74,0.12), rgba(45,107,77,0.15));
+  margin: 0 -18px;
+  padding: 10px 18px;
+  border-radius: 10px;
+}
+.prayer-row-name {
+  font-family: var(--font-arabic);
+  font-size: 1rem;
+  font-weight: 700;
+}
+.prayer-row.current .prayer-row-name { color: var(--gold-400); }
+.prayer-row-time {
+  font-family: var(--font-arabic);
+  font-size: 1rem;
+  color: var(--text-muted);
+  direction: ltr;
+}
+.prayer-row.current .prayer-row-time { color: var(--gold-300); font-weight: 700; }
+.prayer-current-tag {
+  font-size: 0.65rem;
+  background: rgba(201,161,74,0.2);
+  color: var(--gold-300);
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-family: var(--font-ui);
+}
+
+.prayer-col-dates--expanded {
+  padding: 10px 18px 14px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  margin-top: 4px;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   CARDS FEED
+══════════════════════════════════════════════════════════════════ */
 .cards-feed {
   flex: 1;
-  padding: 16px 14px 32px;
+  padding: 8px 14px 32px;
   display: flex;
   flex-direction: column;
   gap: 14px;
   overflow-y: auto;
 }
 
-/* Empty state */
-.empty-state {
-  margin: 60px auto;
-  text-align: center;
-  color: var(--text-muted);
-}
+.empty-state { margin: 60px auto; text-align: center; color: var(--text-muted); }
 .empty-state .es-icon { font-size: 3rem; display: block; margin-bottom: 12px; }
 .empty-state p { font-size: 0.95rem; line-height: 1.7; }
 
 /* ─── DHIKR CARD ─────────────────────────────────────────────────── */
 .dhikr-card {
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: var(--radius-card);
-  padding: 0;
-  box-shadow: var(--shadow-card);
-  overflow: hidden;
-  position: relative;
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  border-radius: var(--radius-card); padding: 0; box-shadow: var(--shadow-card);
+  overflow: hidden; position: relative;
   animation: cardIn 0.35s ease both;
   transition: border-color 0.4s, box-shadow 0.4s;
 }
-
 @keyframes cardIn {
   from { opacity: 0; transform: translateY(14px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-
-/* Completed card */
 .dhikr-card.done {
   border-color: var(--card-border-done);
   box-shadow: 0 2px 20px var(--green-glow), var(--shadow-card);
 }
-
-/* Gold top accent line */
 .dhikr-card::before {
-  content: '';
-  display: block;
-  height: 2px;
+  content: ''; display: block; height: 2px;
   background: linear-gradient(90deg, transparent, var(--gold-500), transparent);
   opacity: 0.5;
 }
@@ -294,108 +531,50 @@ body {
   opacity: 0.7;
 }
 
-/* Card Header row */
 .card-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  display: flex; align-items: center; justify-content: space-between;
   padding: 12px 16px 0;
 }
 .card-index {
-  font-size: 0.72rem;
-  color: var(--text-muted);
-  background: rgba(255,255,255,0.05);
-  padding: 2px 8px;
-  border-radius: 20px;
-  font-family: var(--font-ui);
+  font-size: 0.72rem; color: var(--text-muted);
+  background: rgba(255,255,255,0.05); padding: 2px 8px;
+  border-radius: 20px; font-family: var(--font-ui);
 }
-.card-title-tag {
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--gold-400);
-  font-family: var(--font-ui);
-}
+.card-title-tag { font-size: 0.8rem; font-weight: 700; color: var(--gold-400); font-family: var(--font-ui); }
 .card-done-badge {
-  display: none;
-  align-items: center;
-  gap: 4px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--green-ok);
-  font-family: var(--font-ui);
+  display: none; align-items: center; gap: 4px;
+  font-size: 0.75rem; font-weight: 700; color: var(--green-ok); font-family: var(--font-ui);
 }
 .dhikr-card.done .card-done-badge { display: flex; }
 .dhikr-card.done .card-title-tag  { display: none; }
 
-/* Card body: Arabic text */
-.card-body {
-  padding: 14px 18px 10px;
-}
+.card-body { padding: 14px 18px 10px; }
 .card-arabic {
   font-family: var(--font-arabic);
   font-size: clamp(1.1rem, 4vw, 1.28rem);
-  line-height: 2.1;
-  color: var(--ivory);
-  text-align: right;
-  text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+  line-height: 2.1; color: var(--ivory);
+  text-align: right; text-shadow: 0 1px 4px rgba(0,0,0,0.4);
 }
-
-/* Source label */
 .card-source {
-  display: inline-block;
-  font-size: 0.7rem;
-  color: var(--text-muted);
-  background: rgba(255,255,255,0.04);
-  padding: 2px 10px;
-  border-radius: 20px;
-  margin-top: 6px;
-  font-family: var(--font-ui);
-  border: 1px solid rgba(255,255,255,0.06);
+  display: inline-block; font-size: 0.7rem; color: var(--text-muted);
+  background: rgba(255,255,255,0.04); padding: 2px 10px;
+  border-radius: 20px; margin-top: 6px;
+  font-family: var(--font-ui); border: 1px solid rgba(255,255,255,0.06);
 }
-
-/* Benefit / Hadith */
 .card-benefit {
-  margin: 10px 18px 0;
-  padding: 9px 12px;
-  background: rgba(201,161,74,0.07);
-  border-right: 3px solid var(--gold-500);
-  border-radius: 0 10px 10px 0;
-  font-size: 0.8rem;
-  color: var(--gold-300);
-  line-height: 1.7;
-  font-family: var(--font-ui);
+  margin: 10px 18px 0; padding: 9px 12px;
+  background: rgba(201,161,74,0.07); border-right: 3px solid var(--gold-500);
+  border-radius: 0 10px 10px 0; font-size: 0.8rem; color: var(--gold-300);
+  line-height: 1.7; font-family: var(--font-ui);
 }
 
-/* ─── PROGRESS BAR ───────────────────────────────────────────────── */
-.card-progress-wrap {
-  padding: 14px 18px 0;
-}
-.card-progress-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 6px;
-}
-.progress-fraction {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--gold-400);
-  font-family: var(--font-arabic);
-}
-.progress-label-text {
-  font-size: 0.72rem;
-  color: var(--text-muted);
-  font-family: var(--font-ui);
-}
-.progress-track {
-  height: 7px;
-  background: rgba(255,255,255,0.07);
-  border-radius: 10px;
-  overflow: hidden;
-}
+.card-progress-wrap { padding: 14px 18px 0; }
+.card-progress-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.progress-fraction { font-size: 0.85rem; font-weight: 700; color: var(--gold-400); font-family: var(--font-arabic); }
+.progress-label-text { font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-ui); }
+.progress-track { height: 7px; background: rgba(255,255,255,0.07); border-radius: 10px; overflow: hidden; }
 .progress-fill {
-  height: 100%;
-  border-radius: 10px;
+  height: 100%; border-radius: 10px;
   background: linear-gradient(90deg, var(--teal-500), var(--gold-500));
   transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
   box-shadow: 0 0 8px rgba(201,161,74,0.4);
@@ -405,85 +584,278 @@ body {
   box-shadow: 0 0 8px rgba(61,184,122,0.5);
 }
 
-/* ─── CARD FOOTER: TAP BUTTON ────────────────────────────────────── */
-.card-footer {
-  padding: 14px 18px 18px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-/* The big tap button */
+.card-footer { padding: 14px 18px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .tap-btn {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 14px 20px;
-  border-radius: 14px;
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 14px 20px; border-radius: 14px;
   background: linear-gradient(135deg, var(--teal-600), var(--teal-500));
-  border: 1px solid rgba(201,161,74,0.3);
-  color: var(--gold-300);
-  font-family: var(--font-ui);
-  font-size: 1rem;
-  font-weight: 700;
+  border: 1px solid rgba(201,161,74,0.3); color: var(--gold-300);
+  font-family: var(--font-ui); font-size: 1rem; font-weight: 700;
   transition: transform 0.1s, box-shadow 0.2s, background 0.3s;
   box-shadow: 0 4px 16px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.06);
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  position: relative;
-  overflow: hidden;
-}
-.tap-btn::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: rgba(255,255,255,0);
-  transition: background 0.15s;
+  user-select: none; -webkit-tap-highlight-color: transparent;
+  position: relative; overflow: hidden;
 }
 .tap-btn:active { transform: scale(0.96); box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
-.tap-btn:active::after { background: rgba(255,255,255,0.07); }
-
 .tap-btn.completed-btn {
   background: linear-gradient(135deg, var(--teal-700), rgba(61,184,122,0.2));
-  border-color: rgba(61,184,122,0.4);
-  color: var(--green-ok);
-  cursor: default;
-  pointer-events: none;
+  border-color: rgba(61,184,122,0.4); color: var(--green-ok);
+  cursor: default; pointer-events: none;
 }
 .tap-btn-icon { font-size: 1.2rem; line-height: 1; }
 .tap-btn-label { font-size: 0.9rem; }
-
-/* Tap pulse animation */
 @keyframes tapPulse {
   0%   { box-shadow: 0 0 0 0 rgba(201,161,74,0.5), 0 4px 16px rgba(0,0,0,0.3); }
   100% { box-shadow: 0 0 0 16px rgba(201,161,74,0), 0 4px 16px rgba(0,0,0,0.3); }
 }
 .tap-btn.pulsing { animation: tapPulse 0.35s ease-out; }
 
-/* Reset-one button */
 .reset-one-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  color: var(--text-muted);
-  font-size: 1.1rem;
-  transition: all 0.2s;
-  flex-shrink: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2px; width: 48px; height: 48px; border-radius: 12px;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  color: var(--text-muted); font-size: 1.1rem; transition: all 0.2s; flex-shrink: 0;
 }
 .reset-one-btn:hover { color: var(--gold-400); border-color: rgba(201,161,74,0.3); background: rgba(201,161,74,0.07); }
 .reset-one-label { font-size: 0.55rem; font-family: var(--font-ui); font-weight: 600; }
 
-/* ─── TOAST NOTIFICATION ─────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════════════
+   TASBEEH SECTION
+══════════════════════════════════════════════════════════════════ */
+
+/* ── Hero Header ── */
+.tasbeeh-hero {
+  position: relative;
+  padding: 0;
+  overflow: hidden;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.tasbeeh-hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(160deg, rgba(22,60,40,0.95) 0%, rgba(10,25,18,0.98) 100%);
+  background-image:
+    linear-gradient(160deg, rgba(22,60,40,0.95) 0%, rgba(10,25,18,0.98) 100%),
+    url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='60' cy='60' r='50' fill='none' stroke='%23c9a14a' stroke-width='0.6' stroke-opacity='0.08'/%3E%3Ccircle cx='60' cy='60' r='30' fill='none' stroke='%23c9a14a' stroke-width='0.6' stroke-opacity='0.05'/%3E%3Cpath d='M60 10 L110 60 L60 110 L10 60Z' fill='none' stroke='%23c9a14a' stroke-width='0.5' stroke-opacity='0.06'/%3E%3C/svg%3E");
+  background-blend-mode: normal;
+}
+.tasbeeh-hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 50% at 50% 100%, rgba(45,107,77,0.3) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.tasbeeh-hero-content {
+  position: relative;
+  z-index: 1;
+  padding: 16px 18px 22px;
+}
+.tasbeeh-hero-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.tasbeeh-title {
+  font-family: var(--font-arabic);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--gold-400);
+  text-align: center;
+  text-shadow: 0 0 30px rgba(201,161,74,0.4);
+  flex: 1;
+}
+.tasbeeh-spacer { width: 40px; }
+
+.tasbeeh-verse {
+  font-family: var(--font-arabic);
+  font-size: 1rem;
+  line-height: 1.9;
+  color: var(--gold-200);
+  text-align: center;
+  padding: 10px 16px;
+  background: rgba(201,161,74,0.07);
+  border: 1px solid rgba(201,161,74,0.15);
+  border-radius: 14px;
+  opacity: 0;
+  animation: fadeUp 0.6s 0.2s ease forwards;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Counter Section ── */
+.tasbeeh-counter-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 18px 28px;
+  gap: 16px;
+}
+
+/* Target pills */
+.tasbeeh-target-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.tasbeeh-target-label {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.tasbeeh-target-pills {
+  display: flex;
+  gap: 6px;
+}
+.target-pill {
+  padding: 6px 14px;
+  border-radius: 30px;
+  font-family: var(--font-arabic);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  transition: all 0.2s;
+}
+.target-pill:hover { border-color: rgba(201,161,74,0.3); color: var(--gold-300); }
+.target-pill.active {
+  background: linear-gradient(135deg, rgba(201,161,74,0.2), rgba(45,107,77,0.2));
+  border-color: rgba(201,161,74,0.5);
+  color: var(--gold-400);
+  box-shadow: 0 0 10px rgba(201,161,74,0.2);
+}
+
+/* Ring */
+.tasbeeh-ring-wrap {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  flex-shrink: 0;
+}
+.tasbeeh-ring-svg {
+  width: 220px;
+  height: 220px;
+  transform: rotate(-90deg);
+  filter: drop-shadow(0 0 18px rgba(201,161,74,0.15));
+}
+.ring-bg {
+  fill: none;
+  stroke: rgba(255,255,255,0.05);
+  stroke-width: 10;
+}
+.ring-fill {
+  fill: none;
+  stroke: url(#ringGrad);
+  stroke-width: 10;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.35s cubic-bezier(0.4,0,0.2,1);
+  filter: drop-shadow(0 0 6px rgba(201,161,74,0.5));
+}
+
+.tasbeeh-tap-btn {
+  position: absolute;
+  inset: 18px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, rgba(34,80,58,0.9), rgba(13,31,26,0.95));
+  border: 1px solid rgba(201,161,74,0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.2s;
+  box-shadow: inset 0 0 40px rgba(0,0,0,0.4), 0 4px 20px rgba(0,0,0,0.4);
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+.tasbeeh-tap-btn:active {
+  transform: scale(0.94);
+  box-shadow: inset 0 0 40px rgba(0,0,0,0.6), 0 2px 10px rgba(0,0,0,0.4);
+}
+.tasbeeh-count-num {
+  font-family: var(--font-arabic);
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: var(--gold-400);
+  line-height: 1;
+  text-shadow: 0 0 20px rgba(201,161,74,0.5);
+  transition: transform 0.15s cubic-bezier(0.175,0.885,0.32,1.275);
+}
+.tasbeeh-count-num.bump {
+  animation: countBump 0.2s cubic-bezier(0.175,0.885,0.32,1.275);
+}
+@keyframes countBump {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+.tasbeeh-count-sub {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-family: var(--font-ui);
+}
+
+/* Progress info */
+.tasbeeh-progress-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--font-arabic);
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+.tasbeeh-pct-badge {
+  background: rgba(201,161,74,0.12);
+  color: var(--gold-400);
+  padding: 3px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-family: var(--font-ui);
+}
+
+/* Reset button */
+.tasbeeh-reset-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 22px;
+  border-radius: var(--radius-btn);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--text-muted);
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+.tasbeeh-reset-btn:hover {
+  border-color: rgba(201,161,74,0.3);
+  color: var(--gold-400);
+  background: rgba(201,161,74,0.06);
+}
+
+/* Completed ring glow */
+.tasbeeh-ring-wrap.completed .tasbeeh-tap-btn {
+  box-shadow: inset 0 0 40px rgba(0,0,0,0.4), 0 0 30px rgba(61,184,122,0.4), 0 4px 20px rgba(0,0,0,0.4);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════════════════════════════ */
 .toast {
   position: fixed;
   bottom: 30px;
@@ -512,6 +884,26 @@ body {
 }
 .toast-icon { font-size: 1.1rem; }
 
+/* Prayer alert */
+#prayerAlert {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--teal-600), var(--teal-700));
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  color: var(--gold-200);
+  padding: 12px 22px;
+  border-radius: 14px;
+  border: 1px solid rgba(201,161,74,0.3);
+  display: none;
+  z-index: 9999;
+  font-family: var(--font-arabic);
+  font-size: 1rem;
+  text-align: center;
+  white-space: nowrap;
+}
+
 /* ─── SCROLLBAR ──────────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: var(--teal-900); }
@@ -520,103 +912,54 @@ body {
 /* ─── RESPONSIVE ─────────────────────────────────────────────────── */
 @media (max-width: 400px) {
   .card-arabic { font-size: 1.05rem; line-height: 2; }
-  .brand-title { font-size: 1.15rem; }
+  .brand-title { font-size: 1.1rem; }
   .reset-label { display: none; }
   .reset-all-btn { padding: 8px 10px; }
+  .prayer-next-time { font-size: 2.1rem; }
+  .prayer-next-name { font-size: 1.6rem; }
+  .tasbeeh-ring-wrap { width: 190px; height: 190px; }
+  .tasbeeh-ring-svg { width: 190px; height: 190px; }
 }
 
 @media (min-width: 541px) {
-  /* On desktop, give it a phone-like frame feel */
   .app-shell {
     border-left: 1px solid var(--card-border);
     border-right: 1px solid var(--card-border);
     box-shadow: 0 0 60px rgba(0,0,0,0.5);
   }
-  body { background: var(--teal-900); }
-}
-#prayerBox{
-
-position:fixed;
-top:6px;
-left:50%;
-transform:translateX(-50%);
-
-background:#003727;
-box-shadow:0 2px 7px rgba(0,0,0,0.5);
-color:white;
-
-padding:4px 10px;
-
-border-radius:10px;
-
-font-size:12px;
-
-display:flex;
-flex-direction:column;
-align-items:center;
-
-z-index:9999;
-
-cursor:pointer;
-
 }
 
-#countdown{
-
-font-size:11px;
-opacity:0.8;
-
+/* تنسيق صندوق الإدخال المخصص */
+.custom-target-box {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 15px;
+  padding: 0 20px;
 }
 
-#allPrayers{
-
-position:fixed;
-top:45px;
-left:50%;
-transform:translateX(-50%);
-
-background:#001c14;
-box-shadow:0 2px 6px rgba(0,0,0,1);
-color:white;
-
-padding:10px 14px;
-
-border-radius:12px;
-
-display:none;
-
-font-size:13px;
-
-z-index:9999;
-
+#customTargetInput {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  color: var(--text-main);
+  padding: 8px 12px;
+  width: 120px;
+  text-align: center;
+  font-family: var(--font-ui);
 }
 
-#countdown{
-
-opacity:0.8;
-font-size:12px;
-
+#applyCustomBtn {
+  background: var(--gold-500);
+  color: var(--teal-900);
+  padding: 8px 20px;
+  border-radius: 10px;
+  font-weight: 700;
+  transition: all 0.2s;
 }
 
-#prayerAlert{
-
-position:fixed;
-top:60px;
-left:50%;
-transform:translateX(-50%);
-
-background:#273e39;
-box-shadow:0 2px 7px rgba(0,0,0,0.5);
-
-
-color:white;
-
-padding:10px 18px;
-
-border-radius:10px;
-
-display:none;
-
-z-index:9999;
-
+#applyCustomBtn:active {
+  transform: scale(0.95);
+  background: var(--gold-400);
 }
+

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="theme-color" content="#1a2e1a" />
+  <meta name="theme-color" content="#0d1f1a" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <title>أذكار الصباح والمساء</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -11,87 +11,266 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  
-<div id="prayerBox">
-  <span id="nextPrayer">تحميل...</span>
-  <span id="countdown"></span>
-</div>
 
-<div id="allPrayers"></div>
+  <!-- ══════════════════════════════════════════
+       SIDEBAR DRAWER
+  ══════════════════════════════════════════ -->
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <nav class="drawer" id="drawer">
+    <div class="drawer-header">
+      <span class="drawer-brand-icon">☽</span>
+      <div>
+        <div class="drawer-title">حصن المسلم</div>
+        <div class="drawer-sub">تطبيق الأذكار</div>
+      </div>
+    </div>
+    <ul class="drawer-menu">
+      <li>
+        <button class="drawer-item active" data-section="azkar" id="menuAzkar">
+          <span class="drawer-item-icon">📖</span>
+          <span>مكتبة الأذكار</span>
+        </button>
+      </li>
+      <li>
+        <button class="drawer-item" data-section="tasbeeh" id="menuTasbeeh">
+          <span class="drawer-item-icon">📿</span>
+          <span>التسبيح</span>
+        </button>
+      </li>
+    </ul>
+    <div class="drawer-footer">بسم الله الرحمن الرحيم</div>
+  </nav>
 
-<div id="prayerAlert"></div>
-  <!-- ╔══════════════════════════════════════════╗
-       ║           STICKY APP HEADER              ║
-       ╚══════════════════════════════════════════╝ -->
   <div class="app-shell">
 
-    <header class="app-header">
-      <div class="header-bg-pattern"></div>
+    <!-- ══════════════════════════════════════════
+         SECTION: AZKAR LIBRARY
+    ══════════════════════════════════════════ -->
+    <section id="sectionAzkar" class="app-section active">
 
-      <div class="header-top">
-        <div class="header-brand">
-          <span class="brand-icon">☽</span>
-          <div>
-            <h1 class="brand-title" id="headerTitle">أذكار الصباح</h1>
-            <p class="brand-sub">حصن المسلم</p>
+      <header class="app-header">
+        <div class="header-bg-pattern"></div>
+
+        <div class="header-top">
+          <button class="hamburger-btn" id="hamburgerBtn" aria-label="القائمة">
+            <span></span><span></span><span></span>
+          </button>
+          <div class="header-brand">
+            <span class="brand-icon">☽</span>
+            <div>
+              <h1 class="brand-title" id="headerTitle">أذكار الصباح</h1>
+              <p class="brand-sub">حصن المسلم</p>
+            </div>
+          </div>
+          <button class="reset-all-btn" id="resetAllBtn" title="إعادة تعيين الكل">
+            <span class="reset-icon">↺</span>
+            <span class="reset-label">إعادة</span>
+          </button>
+        </div>
+
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+          <div class="stat-chip stat-done">
+            <span class="stat-num" id="statDone">0</span>
+            <span class="stat-lbl">مكتمل</span>
+          </div>
+          <div class="stats-master-ring">
+            <svg viewBox="0 0 80 80" class="master-ring-svg">
+              <circle class="mr-bg" cx="40" cy="40" r="34"/>
+              <circle class="mr-fill" id="masterRingFill" cx="40" cy="40" r="34"
+                stroke-dasharray="213.6" stroke-dashoffset="213.6"/>
+            </svg>
+            <div class="master-ring-center">
+              <span class="master-pct" id="masterPct">0%</span>
+            </div>
+          </div>
+          <div class="stat-chip stat-remain">
+            <span class="stat-num" id="statRemain">0</span>
+            <span class="stat-lbl">متبقي</span>
           </div>
         </div>
-        <button class="reset-all-btn" id="resetAllBtn" title="إعادة تعيين الكل">
-          <span class="reset-icon">↺</span>
-          <span class="reset-label">إعادة</span>
-        </button>
+
+        <!-- Tab Bar -->
+        <div class="tab-bar">
+          <button class="tab-btn active" data-tab="morning">
+            <span class="tab-icon">🌅</span> الصباح
+          </button>
+          <button class="tab-btn" data-tab="evening">
+            <span class="tab-icon">🌙</span> المساء
+          </button>
+        </div>
+      </header>
+
+      <!-- Prayer Times Widget -->
+      <div class="prayer-widget" id="prayerWidget">
+        <div class="prayer-collapsed" id="prayerCollapsed">
+          <div class="prayer-col-top">
+            <div class="prayer-col-right">
+              <span class="prayer-mosque-icon">🕌</span>
+              <span class="prayer-label-title">مواقيت الصلاة</span>
+            </div>
+            <div class="prayer-col-left">
+              <span class="prayer-next-label">الصلاة القادمة</span>
+            </div>
+          </div>
+          <div class="prayer-col-main">
+            <div class="prayer-next-name" id="prayerNextName">جارٍ التحميل</div>
+            <div class="prayer-next-time" id="prayerNextTime">--:--</div>
+          </div>
+          <div class="prayer-col-countdown" id="prayerCountdownLine">
+            <span class="countdown-text" id="countdownText">...</span>
+            <span class="expand-hint">• اضغط لعرض الكل</span>
+          </div>
+          <div class="prayer-col-dates" id="prayerDates">
+            <span id="hijriDate">--</span>
+            <span class="date-divider">|</span>
+            <span id="gregDate">--</span>
+          </div>
+        </div>
+
+        <div class="prayer-expanded" id="prayerExpanded">
+          <div class="prayer-expanded-list" id="prayerExpandedList">
+            <!-- Rendered by JS -->
+          </div>
+          <div class="prayer-col-dates prayer-col-dates--expanded" id="prayerDatesExp">
+            <span id="hijriDateExp">--</span>
+            <span class="date-divider">|</span>
+            <span id="gregDateExp">--</span>
+          </div>
+        </div>
       </div>
 
-      <!-- Overall Stats Bar -->
-      <div class="stats-bar">
-        <div class="stat-chip stat-done">
-          <span class="stat-num" id="statDone">0</span>
-          <span class="stat-lbl">مكتمل</span>
+      <main class="cards-feed" id="cardsFeed">
+        <!-- Rendered by script.js -->
+      </main>
+
+    </section>
+
+    <!-- ══════════════════════════════════════════
+         SECTION: TASBEEH (MISBAHA)
+    ══════════════════════════════════════════ -->
+    <section id="sectionTasbeeh" class="app-section">
+
+      <!-- Hero Header -->
+      <div class="tasbeeh-hero">
+        <div class="tasbeeh-hero-bg"></div>
+        <div class="tasbeeh-hero-content">
+          <div class="tasbeeh-hero-top">
+            <button class="hamburger-btn hamburger-btn--light" id="hamburgerBtnT" aria-label="القائمة">
+              <span></span><span></span><span></span>
+            </button>
+            <h1 class="tasbeeh-title">مسبحة</h1>
+            <div class="tasbeeh-spacer"></div>
+          </div>
+          <p class="tasbeeh-verse" id="tasbeehVerse">
+            <!-- Random verse injected by JS -->
+          </p>
         </div>
-        <div class="stats-master-ring">
-          <svg viewBox="0 0 80 80" class="master-ring-svg">
-            <circle class="mr-bg" cx="40" cy="40" r="34"/>
-            <circle class="mr-fill" id="masterRingFill" cx="40" cy="40" r="34"
-              stroke-dasharray="213.6"
-              stroke-dashoffset="213.6"/>
+      </div>
+
+      <!-- Prayer Widget (Tasbeeh section) -->
+      <div class="prayer-widget" id="prayerWidgetT">
+        <div class="prayer-collapsed" id="prayerCollapsedT">
+          <div class="prayer-col-top">
+            <div class="prayer-col-right">
+              <span class="prayer-mosque-icon">🕌</span>
+              <span class="prayer-label-title">مواقيت الصلاة</span>
+            </div>
+            <div class="prayer-col-left">
+              <span class="prayer-next-label">الصلاة القادمة</span>
+            </div>
+          </div>
+          <div class="prayer-col-main">
+            <div class="prayer-next-name" id="prayerNextNameT">جارٍ التحميل</div>
+            <div class="prayer-next-time" id="prayerNextTimeT">--:--</div>
+          </div>
+          <div class="prayer-col-countdown" id="prayerCountdownLineT">
+            <span class="countdown-text" id="countdownTextT">...</span>
+            <span class="expand-hint">• اضغط لعرض الكل</span>
+          </div>
+          <div class="prayer-col-dates">
+            <span id="hijriDateT">--</span>
+            <span class="date-divider">|</span>
+            <span id="gregDateT">--</span>
+          </div>
+        </div>
+        <div class="prayer-expanded" id="prayerExpandedT">
+          <div class="prayer-expanded-list" id="prayerExpandedListT"></div>
+          <div class="prayer-col-dates prayer-col-dates--expanded">
+            <span id="hijriDateExpT">--</span>
+            <span class="date-divider">|</span>
+            <span id="gregDateExpT">--</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tasbeeh Counter -->
+      <div class="tasbeeh-counter-section">
+
+        <!-- Target selector -->
+        <div class="tasbeeh-target-row">
+          <label class="tasbeeh-target-label">عدد التكرار</label>
+          <div class="tasbeeh-target-pills">
+            <button class="target-pill active" data-val="33">٣٣</button>
+            <button class="target-pill" data-val="99">٩٩</button>
+            <button class="target-pill" data-val="100">١٠٠</button>
+            <button class="target-pill" data-val="1000">١٠٠٠</button>
+          </div>
+
+          <div class="custom-target-wrap" style="margin-top: 15px; display: flex; gap: 8px; justify-content: center;">
+  <input type="number" id="customTargetInput" placeholder="رقم مخصص" 
+         style="width: 100px; padding: 8px; border-radius: 20px; border: 1px solid #ccc; text-align: center; font-family: inherit;">
+  <button id="applyCustomBtn" 
+          style="padding: 8px 15px; background: var(--primary); color: white; border: none; border-radius: 20px; cursor: pointer;">
+    تعديل
+  </button>
+</div>
+        </div>
+
+        <!-- Circular progress + tap zone -->
+        <div class="tasbeeh-ring-wrap">
+          <svg class="tasbeeh-ring-svg" viewBox="0 0 220 220">
+            <defs>
+              <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#c9a14a"/>
+                <stop offset="100%" stop-color="#3db87a"/>
+              </linearGradient>
+            </defs>
+            <circle class="ring-bg" cx="110" cy="110" r="94"/>
+            <circle class="ring-fill" id="tasbeehRingFill" cx="110" cy="110" r="94"
+              stroke-dasharray="590.6" stroke-dashoffset="590.6"/>
           </svg>
-          <div class="master-ring-center">
-            <span class="master-pct" id="masterPct">0%</span>
-          </div>
+          <button class="tasbeeh-tap-btn" id="tasbeehTapBtn" aria-label="عدّ">
+            <div class="tasbeeh-count-num" id="tasbeehCount">٠</div>
+            <div class="tasbeeh-count-sub">اضغط للعدّ</div>
+          </button>
         </div>
-        <div class="stat-chip stat-remain">
-          <span class="stat-num" id="statRemain">0</span>
-          <span class="stat-lbl">متبقي</span>
+
+        <!-- Progress label -->
+        <div class="tasbeeh-progress-info">
+          <span id="tasbeehFraction">0 / 33</span>
+          <span class="tasbeeh-pct-badge" id="tasbeehPct">0%</span>
         </div>
+
+        <!-- Reset -->
+        <button class="tasbeeh-reset-btn" id="tasbeehResetBtn">
+          <span>↺</span> إعادة التعيين
+        </button>
+
       </div>
 
-      <!-- Tab Bar -->
-      <div class="tab-bar">
-        <button class="tab-btn active" data-tab="morning">
-          <span class="tab-icon">🌅</span> الصباح
-        </button>
-        <button class="tab-btn" data-tab="evening">
-          <span class="tab-icon">🌙</span> المساء
-        </button>
-      </div>
-    </header>
+    </section>
 
-    <!-- ╔══════════════════════════════════════════╗
-         ║              CARDS FEED                  ║
-         ╚══════════════════════════════════════════╝ -->
-    <main class="cards-feed" id="cardsFeed">
-      <!-- Rendered by script.js -->
-    </main>
-
-    <!-- ╔══════════════════════════════════════════╗
-         ║          COMPLETION TOAST                ║
-         ╚══════════════════════════════════════════╝ -->
+    <!-- Toast -->
     <div class="toast" id="completionToast">
       <span class="toast-icon">✨</span>
       <span class="toast-msg" id="toastMsg">تم الانتهاء من جميع الأذكار!</span>
     </div>
 
   </div><!-- /app-shell -->
+
+  <!-- Prayer alert -->
+  <div id="prayerAlert"></div>
 
   <script src="script.js"></script>
 </body>
